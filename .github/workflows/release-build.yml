@@ -1,0 +1,28 @@
+name: Build and Release C++ Executable
+
+on:
+  push:
+    tags:
+      - 'v*.*.*' # Only trigger for tags like v1.2.3
+
+jobs:
+  build-and-release:
+    runs-on: self-hosted
+
+    steps:
+      # 1. Checkout repo
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # 2. Build Hello.cpp
+      - name: Build Hello.cpp
+        run: |
+          c++ Hello.cpp -o Hello.exe
+
+      # 3. Create a GitHub Release
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: Hello.exe
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
